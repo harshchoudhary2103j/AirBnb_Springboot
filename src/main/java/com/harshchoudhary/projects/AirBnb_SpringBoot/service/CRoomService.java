@@ -25,6 +25,7 @@ public class CRoomService implements IRoomService{
     private final HotelRepository hotelRepository;
     private final InventoryRepository inventoryRepository;
     private  final IInventoryService iInventoryService;
+    private final IBookingService iBookingService;
     @Override
     public RoomDTO createNewRoom(Long hotelId,RoomDTO roomDTO) {
         log.info("Creating a new Room in Hotel with HotelId: "+hotelId);
@@ -75,6 +76,7 @@ public class CRoomService implements IRoomService{
 
         // DELETE ALL THE FUTURE INVENTORY
 
+        iBookingService.deleteAllBookingsByRoom(roomId);
 
         iInventoryService.deleteAllInventories(room);
 

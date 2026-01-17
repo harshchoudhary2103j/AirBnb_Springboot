@@ -1,30 +1,39 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.service;
 
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelInfoDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.RoomDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Room;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.HotelRepository;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.RoomRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
+
 public class CHotelService implements IHotelService {
     private final RoomRepository roomRepository;
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final IInventoryService iInventoryService;
+    private final IBookingService iBookingService;
 
     public CHotelService(HotelRepository hotelRepository, ModelMapper modelMapper, IInventoryService iInventoryService,
-                         RoomRepository roomRepository) {
+                         RoomRepository roomRepository, IBookingService iBookingService) {
         this.hotelRepository = hotelRepository;
         this.modelMapper = modelMapper;
         this.iInventoryService = iInventoryService;
         this.roomRepository = roomRepository;
+        this.iBookingService = iBookingService;
     }
 
     @Override
@@ -67,6 +76,7 @@ public class CHotelService implements IHotelService {
 
         // Delete the future inventories of the hotel
         for(Room room:hotel.getRooms()){
+            iBookingService.deleteAllBookingsByRoom(room.getId());
             iInventoryService.deleteAllInventories(room);
             roomRepository.deleteById(room.getId());
         }
@@ -79,12 +89,24 @@ public class CHotelService implements IHotelService {
     public void activateHotel(Long hotelId) {
         log.info("Updating the hotel with Id: " + hotelId);
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + hotelId));
+
         hotel.setActive(true);
         // Create inventory for all rooms of this hotel
         for(Room room:hotel.getRooms()){
             iInventoryService.initializeRoomForAYear(room);
         }
 
+
+    }
+
+    @Override
+    public HotelInfoDTO getInfobyHotelId(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("Hotel not found with Id: "+hotelId));
+        List<RoomDTO>roomDTOList = hotel.getRooms()
+                .stream()
+                .map((element) -> modelMapper.map(element, RoomDTO.class)).collect(Collectors.toList());
+        return new HotelInfoDTO(modelMapper.map(hotel, HotelDTO.class),roomDTOList);
 
     }
 }
