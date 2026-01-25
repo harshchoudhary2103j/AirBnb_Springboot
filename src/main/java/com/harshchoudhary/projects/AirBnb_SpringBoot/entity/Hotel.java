@@ -1,5 +1,6 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +48,7 @@ public class Hotel {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @JsonIgnore
     private List<Room> rooms = new ArrayList<>();
 
     @ManyToOne

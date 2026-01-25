@@ -2,6 +2,7 @@ package com.harshchoudhary.projects.AirBnb_SpringBoot.controllers;
 
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelInfoDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelPriceDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelSearchRequest;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.service.IHotelService;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.service.IInventoryService;
@@ -21,8 +22,8 @@ public class HotelBrowseController {
     private final IHotelService iHotelService;
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDTO>>searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest){
-       Page<HotelDTO>page =  iInventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDTO>>searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest){
+       Page<HotelPriceDTO>page =  iInventoryService.searchHotels(hotelSearchRequest);
        return ResponseEntity.ok(page);
 
     }
