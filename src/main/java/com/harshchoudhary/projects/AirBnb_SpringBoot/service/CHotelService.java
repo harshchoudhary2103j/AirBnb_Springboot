@@ -5,13 +5,16 @@ import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelInfoDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.RoomDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Room;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.UnauthorizedException;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.HotelRepository;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +44,8 @@ public class CHotelService implements IHotelService {
         log.info("Creating a new hotel with name: "+ hotel.getName());
         Hotel hotel1 = modelMapper.map(hotel,Hotel.class);
         hotel1.setActive(false);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        hotel1.setOwner(user);
         Hotel savedHotel = hotelRepository.save(hotel1);
         log.info("Created a new Hotel with Id: "+savedHotel.getId());
         return modelMapper.map(savedHotel,HotelDTO.class);
@@ -53,6 +58,10 @@ public class CHotelService implements IHotelService {
     public HotelDTO getHotelById(Long id) {
         log.info("Getting the hotel with Id: " + id);
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + id));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
+        }
         return modelMapper.map(hotel, HotelDTO.class);
 
     }
@@ -61,6 +70,10 @@ public class CHotelService implements IHotelService {
     public HotelDTO updateHotelById(Long id,HotelDTO hotelDTO) {
         log.info("Updating the hotel with Id: " + id);
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + id));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
+        }
         modelMapper.map(hotelDTO,hotel);
         hotel.setId(id);
         hotel = hotelRepository.save(hotel);
@@ -72,6 +85,10 @@ public class CHotelService implements IHotelService {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Hotel not found with Id: " + id));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
+        }
 
 
         // Delete the future inventories of the hotel
@@ -89,6 +106,10 @@ public class CHotelService implements IHotelService {
     public void activateHotel(Long hotelId) {
         log.info("Updating the hotel with Id: " + hotelId);
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + hotelId));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
+        }
 
         hotel.setActive(true);
         // Create inventory for all rooms of this hotel

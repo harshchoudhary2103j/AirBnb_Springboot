@@ -7,7 +7,7 @@ import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.HotelMinPriceRep
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.HotelRepository;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.InventoryRepository;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.strategy.PricingService;
-import jakarta.persistence.criteria.CriteriaBuilder;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class PricingUpdateService {
     private  final HotelMinPriceRepository hotelMinPriceRepository;
     private final PricingService pricingService;
     //Scheduler to update the inventory and HotelMinPrice tables every hour
-    @Scheduled(cron = " 0 0 * * *")
+    @Scheduled(cron = " 0 0 * * * *")
     public void updatePrices(){
         int page = 0;
         int batchSize = 100;

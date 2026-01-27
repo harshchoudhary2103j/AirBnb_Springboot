@@ -2,6 +2,9 @@ package com.harshchoudhary.projects.AirBnb_SpringBoot.advice;
 
 
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.HttpStatus;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +53,34 @@ public class GlobalExceptionHandler {
                 .build();
         return buildErrorResponseEntity(apiError);
     }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<?>>handleAuthenticationException(AuthenticationException ex){
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(ex.getMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiResponse<?>>handleJWTException(JwtException ex){
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(ex.getMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<?>>accessDeniedException(AccessDeniedException ex){
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .message(ex.getMessage())
+                .build();
+
+        return buildErrorResponseEntity(apiError);
+    }
+
 
     private ResponseEntity<ApiResponse<?>> buildErrorResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(new ApiResponse<>(apiError), apiError.getStatus());

@@ -51,7 +51,7 @@ public class Hotel {
     @JsonIgnore
     private List<Room> rooms = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User owner;
 
 }

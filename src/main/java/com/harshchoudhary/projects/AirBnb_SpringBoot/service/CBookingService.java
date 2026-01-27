@@ -6,11 +6,13 @@ import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.GuestDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.*;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.enums.BookingStatus;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.UnauthorizedException;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -75,6 +77,11 @@ public class CBookingService implements IBookingService{
         log.info("Adding Guest  for Booking with id : {}",bookingId);
         //Step1 : Get the Booking
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(()->  new ResourceNotFoundException("Booking not found with id: "+bookingId));
+        User user = getCurrentUser();
+        if(!user.equals(booking.getUser())){
+            throw new UnauthorizedException("Booking does not belong to this user with id: "+user.getId());
+
+        }
 
         //Step2 : Check if the booking has Expired
         if(hasBoookingExpired(booking)){
@@ -122,9 +129,8 @@ public class CBookingService implements IBookingService{
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
     }
     public User getCurrentUser(){
-        User user = new User();
-        user.setId(1L); //TODO: Return Dummy User
-        return user;
+
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     }
 

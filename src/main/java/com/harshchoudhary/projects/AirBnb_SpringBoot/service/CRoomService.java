@@ -3,7 +3,9 @@ package com.harshchoudhary.projects.AirBnb_SpringBoot.service;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.RoomDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Room;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.UnauthorizedException;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.HotelRepository;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.InventoryRepository;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.RoomRepository;
@@ -11,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +35,11 @@ public class CRoomService implements IRoomService{
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(()->new ResourceNotFoundException("Hotel not found with HotelId: "+hotelId));
 
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: " + hotelId);
+        }
+
         Room room = modelMapper.map(roomDTO,Room.class);
         room.setHotel(hotel);
         hotel.getRooms().add(room);
@@ -50,6 +58,11 @@ public class CRoomService implements IRoomService{
         log.info("Getting all  Rooms in Hotel with HotelId: "+hotelId);
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(()->new ResourceNotFoundException("Hotel not found with HotelId: "+hotelId));
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(hotel.getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
+        }
 
         return hotel.getRooms()
                 .stream()
@@ -72,6 +85,10 @@ public class CRoomService implements IRoomService{
         log.info("Deleting the room with the room Id: "+roomId);
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(()->new ResourceNotFoundException("Room not found with RoomId: "+roomId));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!user.equals(room.getHotel().getOwner())){
+            throw new UnauthorizedException("This hotel is not owned by the user with id: "+roomId);
+        }
 
 
         // DELETE ALL THE FUTURE INVENTORY
