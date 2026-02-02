@@ -8,6 +8,7 @@ import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 @Data
@@ -19,6 +20,7 @@ public class BookingDTO {
     private LocalDate checkOutDate;
     private BookingStatus bookingStatus;
     private Set<GuestDTO> guests;
+    private BigDecimal amount;
 
 
 }
