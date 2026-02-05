@@ -465,4 +465,4 @@ Contributions are welcome. Please follow the existing code structure:
 
 ## Author
 
-Harsh Choudhary - Backend Engineer
+Harsh Choudhary
