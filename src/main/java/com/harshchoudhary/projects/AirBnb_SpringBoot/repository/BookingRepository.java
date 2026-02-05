@@ -1,12 +1,18 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.repository;
 
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.BookingDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Booking;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking,Long> {
@@ -17,4 +23,10 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
     void deleteAllByRoomId(@Param("roomId") Long roomId);
 
     Optional<Booking> findBysessionId(String sessionId);
+
+    List<Booking> findByHotel(Hotel hotel);
+
+    List<Booking>findByHotelAndCreatedAtBetween(Hotel hotel, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+     List<Booking> findByUser(User user);
 }

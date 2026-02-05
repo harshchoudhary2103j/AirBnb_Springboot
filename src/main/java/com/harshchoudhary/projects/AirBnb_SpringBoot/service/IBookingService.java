@@ -3,9 +3,11 @@ package com.harshchoudhary.projects.AirBnb_SpringBoot.service;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.BookingDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.BookingRequestDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.GuestDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelReportDTO;
 import com.stripe.model.Event;
 import org.jspecify.annotations.Nullable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IBookingService {
@@ -20,4 +22,11 @@ public interface IBookingService {
     void capturePayment(Event event);
 
     void cancelBooking(Long bookingId);
+
+
+     List<BookingDTO> getAllBookingsByHotelId(Long hotelId);
+
+    HotelReportDTO getReportByHotelId(Long hotelId, LocalDate startDate, LocalDate endDate);
+
+    @Nullable List<BookingDTO> getMyBookings();
 }

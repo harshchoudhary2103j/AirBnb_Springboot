@@ -1,6 +1,9 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.controllers;
 
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.BookingDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelReportDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.service.IBookingService;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.service.IHotelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +12,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 @Slf4j
 public class HotelAdminController {
     private final IHotelService iHotelService;
+    private  final IBookingService bookingService;
 
     //API:1 Creating New Hotel
     @PostMapping
@@ -49,5 +56,29 @@ public class HotelAdminController {
         return ResponseEntity.noContent().build();
 
     }
+
+    @GetMapping
+    public ResponseEntity<List<HotelDTO>>getAllHotel(){
+        return ResponseEntity.ok(iHotelService.getAllHotel());
+    }
+
+    @GetMapping("/{hotelId}/bookings")
+    public ResponseEntity<List<BookingDTO>>getAllBookingsByHotelId(@PathVariable Long hotelId) {
+        return ResponseEntity.ok(bookingService.getAllBookingsByHotelId(hotelId));
+    }
+    @GetMapping("/{hotelId}/reports")
+    public ResponseEntity<HotelReportDTO>getReportByHotelId(@PathVariable Long hotelId, @RequestParam(required = false)LocalDate startDate, @RequestParam(required = false)LocalDate endDate) {
+        if(startDate==null){
+            startDate = LocalDate.now().minusMonths(1);
+
+        }
+        if (endDate==null){
+            endDate = LocalDate.now();
+        }
+        return ResponseEntity.ok(bookingService.getReportByHotelId(hotelId,startDate,endDate));
+    }
+
+
+
 
 }

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.harshchoudhary.projects.AirBnb_SpringBoot.util.Apputils.getCurrentUser;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -104,4 +106,40 @@ public class CRoomService implements IRoomService{
         roomRepository.deleteById(roomId);
 
     }
+
+    @Override
+    public RoomDTO updateRoomById(Long hotelId, Long roomId, RoomDTO roomDto) {
+
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
+
+        User user = getCurrentUser();
+        if (!user.equals(hotel.getOwner())) {
+            throw new UnauthorizedException("Not the owner");
+        }
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+
+        // ✅ PATCH-style updates
+        if (roomDto.getBasePrice() != null) {
+            room.setBasePrice(roomDto.getBasePrice());
+        }
+
+        if (roomDto.getCapacity() != null) {
+            room.setCapacity(roomDto.getCapacity());
+        }
+
+        if (roomDto.getAmenities() != null) {
+            room.setAmenities(roomDto.getAmenities());
+        }
+
+        if (roomDto.getPhotos() != null) {
+            room.setPhotos(roomDto.getPhotos());
+        }
+
+        room = roomRepository.save(room);
+        return modelMapper.map(room, RoomDTO.class);
+    }
+
 }
