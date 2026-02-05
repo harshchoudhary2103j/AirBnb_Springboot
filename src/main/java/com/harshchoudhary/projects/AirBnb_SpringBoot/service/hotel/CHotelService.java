@@ -4,6 +4,7 @@ import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.Hotel.HotelDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.Hotel.HotelInfoDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.Room.RoomDTO;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel.Hotel;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel.HotelContactInfo;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Rooms.Room;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Users.User;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
@@ -68,20 +69,24 @@ public class CHotelService implements IHotelService {
         return modelMapper.map(hotel, HotelDTO.class);
 
     }
-
     @Override
-    public HotelDTO updateHotelById(Long id,HotelDTO hotelDTO) {
-        log.info("Updating the hotel with Id: " + id);
-        Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + id));
+    public HotelDTO updateHotelById(Long id, HotelDTO hotelDto) {
+        log.info("Updating the hotel with ID: {}", id);
+        Hotel hotel = hotelRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID: "+id));
+
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!user.equals(hotel.getOwner())){
-            throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
+        if(!user.equals(hotel.getOwner())) {
+            throw new RuntimeException("This user does not own this hotel with id: "+id);
         }
-        modelMapper.map(hotelDTO,hotel);
+
+        modelMapper.map(hotelDto, hotel);
         hotel.setId(id);
         hotel = hotelRepository.save(hotel);
-        return modelMapper.map(hotel,HotelDTO.class);
+        return modelMapper.map(hotel, HotelDTO.class);
     }
+
     @Transactional
     @Override
     public void deleteHotelById(Long id) {
@@ -114,12 +119,12 @@ public class CHotelService implements IHotelService {
             throw new UnauthorizedException("This hotel is not owned by the user with id: "+user.getId());
         }
 
-        hotel.setActive(true);
-        // Create inventory for all rooms of this hotel
-        for(Room room:hotel.getRooms()){
-            iInventoryService.initializeRoomForAYear(room);
+        if (!hotel.isActive()) {
+            hotel.setActive(true);
+            for (Room room : hotel.getRooms()) {
+                iInventoryService.initializeRoomForAYear(room);
+            }
         }
-
 
     }
 

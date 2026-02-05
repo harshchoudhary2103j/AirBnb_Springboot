@@ -40,6 +40,10 @@ public class CInventoryService implements IInventoryService {
     @Transactional
     @Override
     public void initializeRoomForAYear(Room room) {
+        if (inventoryRepository.existsByRoom(room)) {
+            log.info("Inventory already exists for room {}, skipping init", room.getId());
+            return;
+        }
         LocalDate today = LocalDate.now();
         LocalDate endDate = today.plusYears(1);
         for(;!today.isAfter(endDate);today = today.plusDays(1)){

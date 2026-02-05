@@ -47,7 +47,7 @@ public class Hotel {
 
     @OneToMany(
             mappedBy = "hotel",
-            cascade = CascadeType.ALL,
+            cascade = { CascadeType.PERSIST, CascadeType.MERGE },
             orphanRemoval = true
     )
     @JsonIgnore

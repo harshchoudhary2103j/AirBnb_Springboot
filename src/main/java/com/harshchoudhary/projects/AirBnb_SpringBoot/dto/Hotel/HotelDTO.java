@@ -11,5 +11,5 @@ public class HotelDTO {
     private String[]photos;
     private String[] amenities;
     private HotelContactInfo hotelContactInfo;
-    private boolean isActive;
+    private Boolean isActive;
 }
