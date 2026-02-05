@@ -1,6 +1,6 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.security;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

@@ -1,6 +1,6 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.util;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Users.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class Apputils {

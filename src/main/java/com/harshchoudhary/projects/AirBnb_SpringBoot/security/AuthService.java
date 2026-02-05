@@ -1,9 +1,9 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.security;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.LoginDTO;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.SignUpRequestDTO;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.UserDTO;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.Authentication.LoginDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.Authentication.SignUpRequestDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.User.UserDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Users.User;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.enums.UserRole;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.exception.ResourceNotFoundException;
 import com.harshchoudhary.projects.AirBnb_SpringBoot.repository.UserRepository;
@@ -14,7 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.Set;
 
 @Service

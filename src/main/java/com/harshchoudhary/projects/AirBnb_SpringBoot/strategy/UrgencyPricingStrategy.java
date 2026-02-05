@@ -1,8 +1,7 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.strategy;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Inventory;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Inventories.Inventory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

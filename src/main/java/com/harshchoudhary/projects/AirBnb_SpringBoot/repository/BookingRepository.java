@@ -1,10 +1,8 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.repository;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.BookingDTO;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Booking;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.User;
-import org.jspecify.annotations.Nullable;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Bookings.Booking;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel.Hotel;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

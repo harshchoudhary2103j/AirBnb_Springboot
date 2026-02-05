@@ -1,8 +1,8 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.repository;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.HotelPriceDTO;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.HotelMinPrice;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.dto.Hotel.HotelPriceDTO;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel.Hotel;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel.HotelMinPrice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

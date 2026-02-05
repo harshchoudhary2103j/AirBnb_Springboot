@@ -1,8 +1,8 @@
 package com.harshchoudhary.projects.AirBnb_SpringBoot.repository;
 
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Inventory;
-import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Room;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Hotel.Hotel;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Inventories.Inventory;
+import com.harshchoudhary.projects.AirBnb_SpringBoot.entity.Rooms.Room;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,12 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
